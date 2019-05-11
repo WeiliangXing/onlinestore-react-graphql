@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Box, Heading, Card, Image, Text } from 'gestalt';
+import { Container, Box, Heading, Card, Image, Text, SearchField, Icon } from 'gestalt';
 import {Link} from 'react-router-dom';
 import './App.css';
 import Strapi from 'strapi-sdk-javascript/build/main';
@@ -9,7 +9,8 @@ const strapi = new Strapi(apiUrl);
 
 class App extends Component {
   state = {
-    brands:[]
+    brands:[],
+    searchTerm: ''
   }
   async componentDidMount(){
     try{
@@ -24,19 +25,45 @@ class App extends Component {
                   url
                 }
               }
-
           }`
         }
       });
       this.setState({brands:response.data.brands})
-  } catch (err) {
-    console.error(err);
+    } catch (err) {
+      console.error(err);
+    }
   }
-}
+  handleChange = ({ value }) => {
+    this.setState({searchTerm:value});
+  }
+  filterBrands = ({ searchTerm, brands}) => {
+    return brands.filter(brand=>{
+      return (brand.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      brand.description.toLowerCase().includes(searchTerm.toLowerCase()));
+    })
+  }
   render() {
-    const { brands } = this.state;
+    const { searchTerm  } = this.state;
     return (
       <Container>
+        {/* Brands Search Fields */}
+        <Box display="flex" justifyContent="center" marginTop={4}>
+          <SearchField 
+            id="searchField"
+            accessibilityLabel="Brands Search Field"
+            onChange={this.handleChange}
+            value={searchTerm}
+            placeholder="Search Brands"
+          />
+          <Box margin={2}>
+            <Icon
+              icon="filter"
+              color={searchTerm? 'orange' : 'gray'}
+              size={20}
+              accessibilityLabel="filter"
+            />
+          </Box>
+        </Box>
         {/* Brands Section */}
         <Box 
           display="flex"
@@ -59,7 +86,7 @@ class App extends Component {
           wrap 
           display="flex" 
           justifyContent="around">
-          {brands.map(brand=>(
+          {this.filterBrands(this.state).map(brand=>(
             <Box paddingY={4} margin={2} width={200} key ={brand._id}>
               <Card image={
                 <Box height={200} width={200}>
