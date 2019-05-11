@@ -1,2 +1,7 @@
 # onlinestore-react-graphql
-https://walmart.udemy.com/build-an-online-store-with-react-and-graphql-in-90-minutes/learn/v4/t/lecture/11672558?start=0
+Tools:
+- Strapi: cms api auto 
+- Stripe: online payment
+- SendGrid: send email
+- mLab: MongoDb 
+- react developer tools extension on chrome 
