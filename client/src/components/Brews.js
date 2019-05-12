@@ -1,6 +1,7 @@
 import React from 'react';
 import Strapi from 'strapi-sdk-javascript/build/main';
-import {Box, Heading, Text, Image, Card, Button} from 'gestalt';
+import {Box, Heading, Text, Image, Card, Button,Mask} from 'gestalt';
+import {Link} from 'react-router-dom';
 
 const apiUrl = process.env.API_URL || 'http://localhost:1337';
 const strapi = new Strapi(apiUrl);
@@ -8,7 +9,8 @@ const strapi = new Strapi(apiUrl);
 class Brews extends React.Component {
     state = {
         brews:[],
-        brand: ''
+        brand: '',
+        cartItems:[]
     }
     async componentDidMount(){
         try {
@@ -44,7 +46,7 @@ class Brews extends React.Component {
 
     }
     render() {
-        const { brews,brand } = this.state;
+        const { brews,brand,cartItems } = this.state;
         return (
             <Box
                 marginTop={4}
@@ -102,9 +104,22 @@ class Brews extends React.Component {
                     ))}
                 </Box>
             </Box>
+            {/* User Cart */}
+            <Box marginTop={2} marginLeft={8}>
+                <Mask shape="rounded" wash>
+                    <Box display="flex" direction="column" alignItems="center" padding={2}>
+                        {/* User Card Heading */}
+                        <Heading align="center" size="md"> Your Cart</Heading>
+                        <Text color="gray" italic>
+                            {cartItems.length} items selected
+                        </Text>
 
+                        {/* Cart Items */}
+                    </Box>
+                </Mask>
             </Box>
-        )
+        </Box>
+        );
     }
 }
 export default Brews;
